@@ -13,7 +13,7 @@ of the repository `lukashornych/evitalab` and saves it and extracts it to the di
 <build>
     <plugins>
         <plugin>
-            <groupId>one.edeeone.edee</groupId>
+            <groupId>one.edee.oss</groupId>
             <artifactId>github-release-asset-downloader-maven-plugin</artifactId>
             <version>1.0</version>
             <configuration>
