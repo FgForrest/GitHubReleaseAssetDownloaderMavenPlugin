@@ -16,6 +16,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -57,10 +58,21 @@ public class DownloadAsset extends AbstractMojo {
         getLog().info("Asset `" + assetName + "` downloaded and extracted to `" + targetDir.getAbsolutePath() + "`.");
     }
 
-    private void cleanTargetDir() {
+    private void cleanTargetDir() throws MojoExecutionException {
         getLog().info("Cleaning target directory `" + targetDir.getAbsolutePath() + "`...");
         for (File file : targetDir.listFiles()) {
-            file.delete();
+            // delete only nested files, not the target directory itself
+            try {
+                Files.walk(file.toPath())
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+            } catch (IOException e) {
+                throw new MojoExecutionException("Could not delete target director `" + targetDir.getAbsolutePath() + "`.", e);
+            }
+        }
+        if (targetDir.listFiles().length > 0) {
+            throw new MojoExecutionException("Target directory still contains files even after cleaning.");
         }
         getLog().info("Target directory cleaned.");
     }
