@@ -44,7 +44,7 @@ _Note_: currently only zip files are supported.
 
 ## Licence
 
-[Apache License 2.0](LICENSE)
+[MIT](LICENSE)
 
 ## Contribution
 
